@@ -9,48 +9,75 @@
     <link rel="stylesheet" href="https://nyimpen.vercel.app/component/spotfy.css" />
 
     <style>
-        /* CSS Tambahan agar Loading berfungsi di HTML biasa */
+        /* --- CUSTOM STYLE UNTUK BANNER --- */
+        .banner-container {
+            width: 100%;
+            height: 200px; /* Tinggi banner */
+            overflow: hidden;
+            border-radius: 15px 15px 0 0; /* Lengkungan atas saja */
+            position: relative;
+        }
+        
+        .profile-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Agar gambar memenuhi area tanpa gepeng */
+            display: block;
+        }
+
+        /* Penyesuaian Header agar menyatu dengan Banner */
+        .container {
+            padding-top: 0 !important; /* Menghilangkan padding atas bawaan CSS eksternal */
+            overflow: hidden;
+        }
+
+        header {
+            position: relative;
+            margin-top: -60px; /* Menarik profil ke atas banner sedikit */
+            text-align: center;
+        }
+
+        .profile-pic {
+            border: 5px solid #191414; /* Border agar foto profil terlihat jelas di atas banner */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Loading & AI Chat Style */
         .fa-spin { animation: fa-spin 2s infinite linear; }
         @keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root { --primary: #1DB954; --dark: #191414; }
         
-        /* GAYA UNTUK CHAT AI (Agar menyatu dengan tema Spotify) */
-        :root { --primary: #1DB954; /* Spotify Green */ --dark: #191414; --text: #fff; }
-        
-        /* Tombol AI Melayang */
         .ai-float {
             position: fixed; bottom: 20px; right: 20px;
             width: 50px; height: 50px; background: var(--primary);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: white; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 15px rgba(29, 185, 84, 0.5); z-index: 9999;
-            transition: transform 0.3s;
         }
-        .ai-float:hover { transform: scale(1.1); }
 
-        /* Jendela Chat */
         #chat-window {
             position: fixed; bottom: 80px; right: 20px;
-            width: 300px; height: 400px;
-            background: #282828; /* Spotify Dark Grey */
-            border: 1px solid #1DB954;
-            border-radius: 10px;
-            display: none; flex-direction: column;
-            z-index: 9999; overflow: hidden;
+            width: 300px; height: 400px; background: #282828;
+            border: 1px solid #1DB954; border-radius: 10px;
+            display: none; flex-direction: column; z-index: 9999;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        #chat-header { background: #181818; padding: 15px; color: var(--primary); font-weight: bold; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
         #messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .msg { padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; max-width: 85%; color: white; }
         .user { align-self: flex-end; background: var(--primary); color: black; }
         .ai { align-self: flex-start; background: #3E3E3E; }
         #input-area { display: flex; padding: 10px; background: #181818; }
         #userInput { flex: 1; background: #333; border: none; color: white; padding: 8px; border-radius: 20px; outline: none; padding-left: 15px; }
-        #sendBtn { background: transparent; border: none; color: var(--primary); margin-left: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div class="banner-container">
+            <img src="https://files.catbox.moe/vmbvm7.jpg" alt="Profile Banner" class="profile-banner" />
+        </div>
+
         <header>
             <img src="https://nyimpen.vercel.app/component/logoku.png" alt="Profile Picture" class="profile-pic" />
             <h1 class="nama">Michael</h1>
@@ -69,59 +96,47 @@
                 
                 <iframe
                     id="spotify-iframe"
-                    src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" 
+                    src="https://open.spotify.com/embed/playlist/37i9dQZF1EVJSv36v9S9eP" 
                     frameBorder="0"
                     allowTransparency="true"
                     allow="encrypted-media"
                     style="display: none; width: 100%; height: 380px; border-radius: 12px;"
                 ></iframe>
-                </div>
+            </div>
         </section>
 
         <div class="social-icons">
-            <a href="https://github.com/Michael" target="_blank" class="social-link" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-            </a>
-            <a href="https://wa.me/6283169566533?text=Michael+Ganteng" target="_blank" class="social-link" rel="noopener noreferrer">
-                <i class="fab fa-whatsapp"></i>
-            </a>
-            <a href="https://instagram.com/zaxius262" target="_blank" class="social-link" rel="noopener noreferrer">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="#" target="_blank" class="social-link" rel="noopener noreferrer">
-                <i class="fas fa-arrow-up-right-from-square"></i>
-            </a>
+            <a href="https://github.com/Michael" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="https://wa.me/6283169566533" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://instagram.com/zaxius262" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" class="social-link"><i class="fas fa-arrow-up-right-from-square"></i></a>
         </div>
     </div>
 
-    <div class="ai-float" onclick="toggleChat()">
-        <i class="fas fa-robot"></i>
-    </div>
-
+    <div class="ai-float" onclick="toggleChat()">AI</div>
     <div id="chat-window">
-        <div id="chat-header">
+        <div style="background: #181818; padding: 15px; color: #1DB954; font-weight: bold; display: flex; justify-content: space-between;">
             <span>Michael's AI</span>
             <span style="cursor:pointer" onclick="toggleChat()">✖</span>
         </div>
         <div id="messages">
-            <div class="msg ai">Halo! Saya asisten AI Michael. Ada yang bisa dibantu?</div>
+            <div class="msg ai">Halo! Ada yang bisa dibantu?</div>
         </div>
         <div id="input-area">
-            <input type="text" id="userInput" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') askAI()">
-            <button id="sendBtn" onclick="askAI()"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="if(event.key==='Enter') askAI()">
         </div>
     </div>
 
     <script>
-        // 1. LOGIK LOADING 5 DETIK (Sesuai permintaan React Anda)
+        // Logik Loading 5 Detik
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loading-spinner').style.display = 'none';
                 document.getElementById('spotify-iframe').style.display = 'block';
-            }, 5000); // 5000ms = 5 detik
+            }, 5000);
         });
 
-        // 2. LOGIK AI CHAT
+        // Logik Chat
         function toggleChat() {
             const win = document.getElementById('chat-window');
             win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
@@ -132,14 +147,10 @@
             const msgs = document.getElementById('messages');
             const text = input.value.trim();
             if(!text) return;
-
             msgs.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = '';
-
-            const loadId = 'load-' + Date.now();
+            const loadId = 'l-' + Date.now();
             msgs.innerHTML += `<div class="msg ai" id="${loadId}">...</div>`;
-            msgs.scrollTop = msgs.scrollHeight;
-
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
@@ -148,9 +159,7 @@
                 });
                 const data = await res.json();
                 document.getElementById(loadId).innerText = data.reply;
-            } catch (e) {
-                document.getElementById(loadId).innerText = "Gagal terhubung.";
-            }
+            } catch (e) { document.getElementById(loadId).innerText = "Error."; }
             msgs.scrollTop = msgs.scrollHeight;
         }
     </script>
