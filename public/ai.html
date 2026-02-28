@@ -3,82 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Assistant</title>
+    <title>Michael AI | Assistant</title>
     <style>
-        :root { --bg: #0f172a; --primary: #38bdf8; --text: #f1f5f9; --chat-bg: #1e293b; }
-        body, html { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif; overflow: hidden; }
+        body, html { height: 100%; margin: 0; background: #0b0b0b; color: #ececec; font-family: sans-serif; }
+        .chat-container { display: flex; flex-direction: column; height: 100vh; max-width: 800px; margin: 0 auto; }
+        header { padding: 15px; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between; }
+        header a { color: #1DB954; text-decoration: none; font-weight: bold; }
         
-        .chat-wrapper { display: flex; flex-direction: column; height: 100vh; }
-        header { padding: 1rem; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; }
-        header a { color: var(--primary); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        #messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 16px; border-radius: 12px; max-width: 85%; line-height: 1.5; font-size: 0.95rem; }
+        .user { align-self: flex-end; background: #1DB954; color: black; border-bottom-right-radius: 2px; }
+        .ai { align-self: flex-start; background: #212121; border-bottom-left-radius: 2px; }
 
-        #chat-content { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        .bubble { padding: 0.8rem 1.2rem; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; max-width: 85%; }
-        .user { align-self: flex-end; background: var(--primary); color: #0f172a; border-bottom-right-radius: 2px; }
-        .ai { align-self: flex-start; background: var(--chat-bg); border: 1px solid #334155; border-bottom-left-radius: 2px; }
-
-        .input-area { padding: 1rem; background: var(--bg); border-top: 1px solid #334155; }
-        .input-box { max-width: 800px; margin: 0 auto; display: flex; background: var(--chat-bg); padding: 0.5rem; border-radius: 12px; border: 1px solid #444; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 0.6rem; outline: none; font-size: 1rem; width: 100%; }
-        button { background: var(--primary); border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        @media (max-width: 480px) {
-            #chat-content { padding: 1rem; }
-            .bubble { max-width: 90%; font-size: 0.9rem; }
-        }
+        .input-area { padding: 20px; background: #0b0b0b; }
+        .input-box { display: flex; background: #212121; padding: 8px; border-radius: 25px; border: 1px solid #444; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 10px 15px; outline: none; }
+        button { background: #1DB954; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="chat-wrapper">
+    <div class="chat-container">
         <header>
-            <a href="index.html">← Portofolio</a>
-            <span style="font-weight:bold; font-size:0.9rem;">Llama 3.3 Assistant</span>
+            <a href="index.html">← Kembali</a>
+            <span>Michael AI Assistant</span>
             <div style="width:50px"></div>
         </header>
-
-        <div id="chat-content">
-            <div class="bubble ai">Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?</div>
+        <div id="messages">
+            <div class="msg ai">Halo Michael! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?</div>
         </div>
-
         <div class="input-area">
             <div class="input-box">
-                <input type="text" id="userInput" placeholder="Tulis pesan..." autocomplete="off">
-                <button onclick="askAI()">Kirim</button>
+                <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="if(event.key==='Enter') send()">
+                <button onclick="send()">Kirim</button>
             </div>
         </div>
     </div>
-
     <script>
-        async function askAI() {
+        async function send() {
             const input = document.getElementById('userInput');
-            const content = document.getElementById('chat-content');
-            const val = input.value.trim();
-            if(!val) return;
+            const box = document.getElementById('messages');
+            if(!input.value.trim()) return;
 
-            content.innerHTML += `<div class="bubble user">${val}</div>`;
+            box.innerHTML += `<div class="msg user">${input.value}</div>`;
+            const text = input.value;
             input.value = '';
             
-            const loadId = "ai-" + Date.now();
-            content.innerHTML += `<div class="bubble ai" id="${loadId}">Mengetik...</div>`;
-            content.scrollTop = content.scrollHeight;
+            const loadId = 'ai-' + Date.now();
+            box.innerHTML += `<div class="msg ai" id="${loadId}">Sedang berpikir...</div>`;
+            box.scrollTop = box.scrollHeight;
 
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: [{role: "user", content: val}] })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ messages: [{role: "user", content: text}] })
                 });
                 const data = await res.json();
                 document.getElementById(loadId).innerText = data.reply;
-            } catch (e) {
-                document.getElementById(loadId).innerText = "Error koneksi server.";
-            }
-            content.scrollTop = content.scrollHeight;
+            } catch (e) { document.getElementById(loadId).innerText = "Error koneksi."; }
+            box.scrollTop = box.scrollHeight;
         }
-
-        document.getElementById('userInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') askAI();
-        });
     </script>
 </body>
 </html>
