@@ -1,20 +1,18 @@
 const { Groq } = require('groq-sdk');
 
-// Inisialisasi Groq menggunakan API Key dari Environment Variable Vercel
+// Inisialisasi Groq dengan API Key dari Environment Variable
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });
 
 export default async function handler(req, res) {
-    // Pengaturan CORS agar Frontend bisa mengakses API ini
+    // Header CORS agar bisa diakses browser
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Menangani preflight request dari browser
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Memastikan hanya metode POST yang diizinkan
     if (req.method !== 'POST') {
         return res.status(405).json({ reply: "Hanya metode POST yang diizinkan." });
     }
@@ -22,20 +20,23 @@ export default async function handler(req, res) {
     try {
         const { messages } = req.body;
         
-        // Memanggil API Groq
+        // Memanggil API Groq dengan model llama-3.3-70b-versatile
         const completion = await groq.chat.completions.create({
             messages: messages,
-            model: "llama3-8b-8192", // Model cepat dan efisien
+            model: "llama-3.3-70b-versatile", 
             temperature: 0.7,
+            max_tokens: 1024,
         });
 
         const aiResponse = completion.choices[0].message.content;
         
-        // Mengirimkan jawaban balik ke Frontend dengan kunci 'reply'
+        // Mengirimkan jawaban balik ke Frontend
         res.status(200).json({ reply: aiResponse });
 
     } catch (error) {
         console.error("Server Error:", error);
-        res.status(500).json({ reply: "Maaf, terjadi kesalahan di server: " + error.message });
+        res.status(500).json({ 
+            reply: "Maaf, terjadi kesalahan di server: " + error.message 
+        });
     }
 }
