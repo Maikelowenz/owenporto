@@ -2,166 +2,72 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michael | Spotify Music</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Michael | Portofolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://nyimpen.vercel.app/component/spotfy.css" />
-
     <style>
-        /* --- CUSTOM STYLE UNTUK BANNER --- */
-        .banner-container {
-            width: 100%;
-            height: 200px; /* Tinggi banner */
-            overflow: hidden;
-            border-radius: 15px 15px 0 0; /* Lengkungan atas saja */
-            position: relative;
-        }
+        :root { --primary: #1DB954; --dark: #191414; --text: #fff; }
+        body { background-color: var(--dark); margin: 0; padding: 0; overflow-x: hidden; }
         
-        .profile-banner {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Agar gambar memenuhi area tanpa gepeng */
-            display: block;
-        }
+        /* Banner Responsif */
+        .banner-container { width: 100%; height: clamp(150px, 25vh, 250px); overflow: hidden; }
+        .profile-banner { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Penyesuaian Header agar menyatu dengan Banner */
-        .container {
-            padding-top: 0 !important; /* Menghilangkan padding atas bawaan CSS eksternal */
-            overflow: hidden;
-        }
-
-        header {
-            position: relative;
-            margin-top: -60px; /* Menarik profil ke atas banner sedikit */
-            text-align: center;
-        }
-
-        .profile-pic {
-            border: 5px solid #191414; /* Border agar foto profil terlihat jelas di atas banner */
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Loading & AI Chat Style */
-        .fa-spin { animation: fa-spin 2s infinite linear; }
-        @keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        :root { --primary: #1DB954; --dark: #191414; }
+        /* Layout Utama */
+        .container { max-width: 600px; margin: 0 auto; padding-top: 0 !important; }
+        header { margin-top: -50px; text-align: center; position: relative; z-index: 10; }
+        .profile-pic { border: 4px solid var(--dark); width: 100px; height: 100px; border-radius: 50%; }
         
-        .ai-float {
-            position: fixed; bottom: 20px; right: 20px;
-            width: 50px; height: 50px; background: var(--primary);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.5); z-index: 9999;
-        }
+        /* Teks Responsif */
+        .nama { font-size: clamp(1.5rem, 5vw, 2rem); color: white; margin: 10px 0; }
+        .bio { color: #b3b3b3; font-style: italic; }
 
-        #chat-window {
-            position: fixed; bottom: 80px; right: 20px;
-            width: 300px; height: 400px; background: #282828;
-            border: 1px solid #1DB954; border-radius: 10px;
-            display: none; flex-direction: column; z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        /* Tombol Navigasi AI */
+        .ai-nav-btn {
+            display: inline-block; margin: 20px 0; padding: 10px 20px;
+            background: var(--primary); color: black; font-weight: bold;
+            text-decoration: none; border-radius: 20px; transition: 0.3s;
         }
-        #messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; max-width: 85%; color: white; }
-        .user { align-self: flex-end; background: var(--primary); color: black; }
-        .ai { align-self: flex-start; background: #3E3E3E; }
-        #input-area { display: flex; padding: 10px; background: #181818; }
-        #userInput { flex: 1; background: #333; border: none; color: white; padding: 8px; border-radius: 20px; outline: none; padding-left: 15px; }
+        .ai-nav-btn:hover { transform: scale(1.05); background: #1ed760; }
+
+        @media (max-width: 480px) { .container { width: 90%; } }
     </style>
 </head>
 <body>
-
+    <div class="banner-container">
+        <img src="https://files.catbox.moe/vmbvm7.jpg" alt="Banner" class="profile-banner">
+    </div>
     <div class="container">
-        <div class="banner-container">
-            <img src="https://files.catbox.moe/vmbvm7.jpg" alt="Profile Banner" class="profile-banner" />
-        </div>
-
         <header>
-            <img src="https://nyimpen.vercel.app/component/logoku.png" alt="Profile Picture" class="profile-pic" />
+            <img src="https://nyimpen.vercel.app/component/logoku.png" alt="Profile" class="profile-pic">
             <h1 class="nama">Michael</h1>
-            <p class="lokasi">
-                <i class="fas fa-globe-asia"></i> Lampung, Pringsewu
-            </p>
+            <p class="lokasi"><i class="fas fa-globe-asia"></i> Lampung, Pringsewu</p>
             <p class="bio">”destroyer.”</p>
+            <a href="ai.html" class="ai-nav-btn"><i class="fas fa-robot"></i> Tanya Michael AI</a>
         </header>
 
         <section class="spotify-section">
-            <h2>The Playlist I Listen To</h2>
             <div class="iframe-container">
-                <div id="loading-spinner" class="loading">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: white;"></i>
-                </div>
-                
-                <iframe
-                    id="spotify-iframe"
-                    src="https://open.spotify.com/embed/playlist/37i9dQZF1EVJSv36v9S9eP" 
-                    frameBorder="0"
-                    allowTransparency="true"
-                    allow="encrypted-media"
-                    style="display: none; width: 100%; height: 380px; border-radius: 12px;"
-                ></iframe>
+                <div id="loading" class="loading"><i class="fas fa-spinner fa-spin"></i></div>
+                <iframe id="sp-frame" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGvYBM3s" 
+                        frameBorder="0" allow="encrypted-media" style="display:none; width:100%; height:380px; border-radius:12px;"></iframe>
             </div>
         </section>
 
         <div class="social-icons">
-            <a href="https://github.com/Michael" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
-            <a href="https://wa.me/6283169566533" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://instagram.com/zaxius262" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" target="_blank" class="social-link"><i class="fas fa-arrow-up-right-from-square"></i></a>
+            <a href="https://github.com/Michael" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="https://wa.me/6283169566533" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://instagram.com/zaxius262" class="social-link"><i class="fab fa-instagram"></i></a>
         </div>
     </div>
-
-    <div class="ai-float" onclick="toggleChat()">AI</div>
-    <div id="chat-window">
-        <div style="background: #181818; padding: 15px; color: #1DB954; font-weight: bold; display: flex; justify-content: space-between;">
-            <span>Michael's AI</span>
-            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
-        </div>
-        <div id="messages">
-            <div class="msg ai">Halo! Ada yang bisa dibantu?</div>
-        </div>
-        <div id="input-area">
-            <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="if(event.key==='Enter') askAI()">
-        </div>
-    </div>
-
     <script>
-        // Logik Loading 5 Detik
-        window.addEventListener('load', () => {
+        window.onload = () => {
             setTimeout(() => {
-                document.getElementById('loading-spinner').style.display = 'none';
-                document.getElementById('spotify-iframe').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('sp-frame').style.display = 'block';
             }, 5000);
-        });
-
-        // Logik Chat
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        async function askAI() {
-            const input = document.getElementById('userInput');
-            const msgs = document.getElementById('messages');
-            const text = input.value.trim();
-            if(!text) return;
-            msgs.innerHTML += `<div class="msg user">${text}</div>`;
-            input.value = '';
-            const loadId = 'l-' + Date.now();
-            msgs.innerHTML += `<div class="msg ai" id="${loadId}">...</div>`;
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ messages: [{ role: "user", content: text }] })
-                });
-                const data = await res.json();
-                document.getElementById(loadId).innerText = data.reply;
-            } catch (e) { document.getElementById(loadId).innerText = "Error."; }
-            msgs.scrollTop = msgs.scrollHeight;
-        }
+        };
     </script>
 </body>
 </html>
